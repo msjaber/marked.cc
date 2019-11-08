@@ -2,7 +2,7 @@
 
 # Marked.cc
 
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+![Preview](https://github.com/msjaber/marked.cc/blob/master/preview.png?raw=true "Preview")
 
 It helps you create beautiful images for your notes, just like what [Carbon](https://carbon.now.sh) does for your code.
 
