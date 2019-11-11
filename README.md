@@ -4,7 +4,7 @@
 
 ![Preview](https://github.com/msjaber/marked.cc/blob/master/preview.png?raw=true "Preview")
 
-It helps you create beautiful images for your notes, just like what [Carbon](https://carbon.now.sh) does for your code.
+Marked helps you create beautiful images for your notes, just like what [Carbon](https://carbon.now.sh) does for your code.
 
 - 👉 Site: [https://marked.cc/](https://marked.cc)
 
