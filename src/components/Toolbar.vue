@@ -156,14 +156,8 @@ export default {
 		palette_is_open: false
     }
   },
-  mounted() { 
-  	let self = this
+  mounted() {
     const clicked_outside_colors_palette = (e) => {
-      this.$nextTick(() => {	
-	      console.log({
-	      	palette: self.$refs
-	      })
-      })
       let has_clicked_inside = e.target === this.$el || this.$refs.palette.contains(e.target)
       return has_clicked_inside ? null : this.palette_is_open = false
     }

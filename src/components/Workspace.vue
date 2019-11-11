@@ -225,9 +225,9 @@ export default {
 			console.log('Sending')
 			ga('send', {
               'hitType': 'event',
-              'eventCategory': 'User Manual Download',
-              'eventAction': 'PDF Download',
-              'eventLabel': 'Name',
+              'eventCategory': 'Export Image',
+              'eventAction': 'Export Image',
+              'eventLabel': 'Export Image',
               'useBeacon': true,
               'hitCallback': () => {
 				console.log('Sent')
@@ -256,38 +256,6 @@ export default {
 				this.state.is_downloading = false
 			})
 		},
-
-		// test() {
-		// 	let node = document.getElementById('c-exportable')
-		// 	node.style.maxWidth = 'initial'
-		// 	let scale = 1.5
-		// 	const width =  node.clientWidth  * scale
-		// 	const height =  node.clientHeight * scale
-		// 	domtoimage.toPng(document.getElementById('c-exportable'), {
-		// 	  width: width,
-		// 	  height: height,
-		// 	  style: {
-		// 	  	// 'padding': '0rem',
-		// 	  	// 'paddingLeft': '1rem',
-		// 	  	'paddingTop': `0rem`,
-		// 	  	'paddingBottom': `0rem`,
-		// 	  	'paddingRight': `0rem`,
-		// 	  	'paddingLeft': `0rem`,
-		// 	  	'margin': 'auto auto',
-		// 	  	'display': 'flex',
-		// 	  	'backgroundColor': 'red',
-		// 	  	'justifyContent': 'center',
-		// 	  	'alignItems': 'center',
-		// 	    'transform': `scale(${scale})`,
-		// 	    'transform-origin': 'center'
-		// 	  }
-		// 	}).then(function(data) {
-		// 	  var img = new Image();
-		// 	  document.getElementById('result').innerHTML = '';
-		// 	  document.getElementById('result').appendChild(img);
-		// 	  img.src = data;
-		// 	})
-		// },
 
 		async get_image() {
 			let node = document.getElementById('c-exportable')
