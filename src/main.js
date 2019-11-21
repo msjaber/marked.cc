@@ -14,13 +14,13 @@ const router = new VueRouter({
   mode: 'history',
   routes: [
     {
-      path: '/',
+      path: '/landing',
       name: 'Landing',
       component: Landing
     },
 
     {
-	    path: '/use',
+	    path: '/',
 	    name: 'Home',
 	    component: Home	
     }

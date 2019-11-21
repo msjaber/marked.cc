@@ -22,7 +22,7 @@ class Highlighter {
         let parent_text = parent_element.textContent
         let splited_parts = parent_text.split(selected_text)
         let should_demark = parent_element.dataset.class == class_name
-        
+
         if (should_demark) class_name = 'highlighted--empty'
         
         parent_element.remove()
@@ -43,9 +43,66 @@ class Highlighter {
         return
       }
       
-      let generated_node = this.generate_highlighted_element(range.extractContents().textContent, class_name)
-      range.insertNode(generated_node)
+      let fragment = range.cloneContents()
+      let old = fragment.cloneNode(true)
+      // let generated_node = this.generate_highlighted_element(y, class_name)
 
+      let transpose = (fragment) => {
+        // for (let node = fragment.firstChild; node; node = node.nextSibling) {
+        //   console.log(node);
+        //   // if (node.hasChildNodes()) {
+        //     // transpose(node)
+        //   // }
+
+        //   if (is_text_node(node)) {
+        //     fragment.replaceChild(this.generate_highlighted_element(node.textContent, class_name), node)
+        //   } else {
+        //     let x = node
+
+        //     debugger
+
+        //     if (true) {
+
+        //     }
+        //   }
+
+        //   debugger
+        // }
+        ////////////////////////////////
+
+        fragment.childNodes.forEach((node) => {
+          if (is_text_node(node)) {
+            fragment.replaceChild(this.generate_highlighted_element(node.textContent, class_name), node)
+            return
+          }
+          
+          if (node == range.endContainer || node == range.startContainer) {
+          }
+          // if (node.hasChildNodes()) {
+          //   transpose(node)
+          // }
+        })
+
+        //////////////////////////////
+        // fragment.childNodes.forEach((node) => {
+        //   if (node.hasChildNodes()) {
+        //     transpose(node)
+        //   }
+
+        //   if (is_text_node(node)) {
+        //     let n = node
+        //     debugger
+        //     fragment.replaceChild(this.generate_highlighted_element(node.textContent, class_name), node)
+        //   }
+        // })
+
+        return fragment
+      }
+
+      let f = transpose(fragment)
+      debugger
+      range.extractContents()
+      range.insertNode(fragment)
       // Select the new generated_node
       let new_range = document.createRange()
       range.selectNodeContents(generated_node.childNodes[0]) // @todo: make sure childNodes[0] always exists
@@ -56,7 +113,7 @@ class Highlighter {
   clean_highlighted_elements() {
     for (let node = this.ctx.firstChild; node; node = node.nextSibling) {
       // Clean mark elements from any childs
-      if (this.is_highlighted_node(node)) {
+      if (is_highlighted_node(node)) {
         node.innerText = node.innerText
       }
     }
@@ -72,13 +129,18 @@ class Highlighter {
     span.appendChild(new Text(text))
     return span
   }
+}
 
-  is_highlighted_node(node) {
-    if (node.nodeType == 1) {
-      return node.classList.contains('is-highlighted')
-    }
-    return false
+
+function is_highlighted_node(node) {
+  if (node.nodeType == 1) {
+    return node.classList.contains('is-highlighted')
   }
+  return false
+}
+
+function is_text_node(node) {
+  return node.nodeType == Node.TEXT_NODE
 }
 
 export default Highlighter

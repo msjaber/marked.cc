@@ -12,10 +12,11 @@
 				maxlength="25"
 				placeholder="It begins with a word"
 
+				ref="title"
 				v-model="title"
 				@blur="hide_title_placeholder()"
 				@keydown.enter.prevent="focus_on_text"
-				ref="title"></input>
+			></input>
 		</div>
 		
 		<div class="c-page"
@@ -27,16 +28,17 @@
    		>
 			
 			<span class="c-page__date select-none">
-				Oct 26, 2019 at 11:02  PM</span>
-									
+				{{ date }}
+			</span>
+
 			<div 
 				tabindex="0" 
 				class="c-page__text" 
 				contenteditable="true"
 				ref="text"
+				v-html="text"
 				@mouseup.stop="mouseup_callback"
 				@keydown="$emit('hide_edit_menu')"
-				v-html="text"
 			>
 			</div>
 		</div>
@@ -69,8 +71,8 @@ export default {
 	data () {
 		return {
 			title: '',
-			selected_text_rect: null,
-            text: ''
+            text: '',
+			selected_text_rect: null
 		}
 	},
 

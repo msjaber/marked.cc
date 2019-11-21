@@ -50,8 +50,8 @@
 				</button>
 			</li>
 
-			<li class="c-toolbar__item highlight-color spacer--right">
-				<button @click.stop="palette_is_open = !palette_is_open">
+			<li class="c-toolbar__item c-toolbar__item--highlight-color">
+				<button @click.stop="toggle_palette">
 					<span class="c-toolbar__item--icon higlight-color-icon">
 						<span :style="{'background-color': colors[options.highlight_color_index].display_color}"></span>
 					</span>
@@ -67,9 +67,9 @@
 				</transition>
 			</li>
 			
-			<li class="c-toolbar__item spacer--right">
+			<li class="c-toolbar__item spacer--left spacer--right only-desktop">
 				<button @click="$emit('toggle_size')">
-					<span class="c-toolbar__item--icon higlight-color-icon">	
+					<span class="c-toolbar__item--icon">	
 						<svg width="42px" height="42px" viewBox="-4 -1 48 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 						    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
 						        <g id="Desktop-HD-Copy-2" transform="translate(-535.000000, -93.000000)">
@@ -86,21 +86,49 @@
 				</button>
 			</li>
 
-			<li class="c-toolbar__item c-toolbar__item--slider">
+			<!-- <li class="c-toolbar__item c-toolbar__item--window-size only-mobile">
+				<button class="flex-center" @click.stop="toggle_window_size" style="min-width: 112px; text-align: left;font-size: small; width: 100px; color: hsl(200, 25%, 40%);">
+					Window Size
+					<svg style="padding-left: 3px;" width="8px" height="6px" viewBox="0 0 6 3" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+					    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+					        <g id="A4-Copy" transform="translate(-288.000000, -447.000000)" fill="hsl(200, 25%, 40%)">
+					            <polygon id="ion-android-arrow-dropdown---Ionicons" points="288 447 294 447 291 450"></polygon>
+					        </g>
+					    </g>
+					</svg>
+				</button>
+
+				<transition name="fade">
+					<ul ref="window_size" class="c-window-size" v-show="window_size_is_open">
+						<li class="c-toolbar__item c-toolbar__item--slider  spacer--right">
+							<div>
+								<label style="text-align: left;font-size: small; color: #888;">Horizantal Padding</label>
+								<input class="c-range-slider"  value="5" type="range" min="5" max="15" step="1" @input="$emit('padding_x_callback', $event)">
+							</div>
+						</li>
+						<li class="c-toolbar__item c-toolbar__item--slider">
+							<div>
+								<label style="text-align: left;font-size: small; color: #888;">Vertical Padding</label>
+								<input class="c-range-slider" value="5" type="range" min="5" max="15" step="1" @input="$emit('padding_y_callback', $event)">
+							</div>
+						</li>
+					</ul>
+				</transition>
+			</li> -->
+
+			<li class="c-toolbar__item c-toolbar__item--slider only-desktop">
 				<div>
-					<!-- <label style="text-align: left;font-size: small; color: #888;">Horizantal Padding</label> -->
 					<input class="c-range-slider"  value="5" type="range" min="5" max="15" step="1" @input="$emit('padding_x_callback', $event)">
 				</div>
 			</li>
-			<li class="c-toolbar__item c-toolbar__item--slider  spacer--right">
+			<li class="c-toolbar__item c-toolbar__item--slider spacer--right only-desktop">
 				<div>
-					<!-- <label style="text-align: left;font-size: small; color: #888;">Vertical Padding</label> -->
 					<input class="c-range-slider" value="5" type="range" min="5" max="15" step="1" @input="$emit('padding_y_callback', $event)">
 				</div>
 			</li>
 		</ul>
 
-		<ul class="c-toolbar-items">
+		<!-- <ul class="c-toolbar-items">
 			<li class="c-toolbar__item">
 				<button @click="$emit('export')">
 					<span v-if="is_downloading" class="c-toolbar__item--icon">
@@ -108,13 +136,13 @@
 							<div class="loader"></div>
 						</div>
 					</span>
-					
+
 					<span v-else class="c-toolbar__item--icon">
 						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
 					</span>
 				</button>
 			</li>
-		</ul>
+		</ul> -->
 	</div>
 </template>
 
@@ -148,70 +176,41 @@ export default {
     select_highlight_color(index) {
     	this.palette_is_open = false
     	this.$emit('select_highlight_color', index)
-    }
+    },
+    toggle_palette() {
+		this.palette_is_open = !this.palette_is_open
+    	// this.window_size_is_open = false
+    },
+    // toggle_window_size() {
+    	// this.window_size_is_open = !this.window_size_is_open
+		// this.palette_is_open = false
+    // }
   },
 
   data () {
     return {
-		palette_is_open: false
+		palette_is_open: false,
+		// window_size_is_open: false
     }
   },
+  
   mounted() {
     const clicked_outside_colors_palette = (e) => {
       let has_clicked_inside = e.target === this.$el || this.$refs.palette.contains(e.target)
       return has_clicked_inside ? null : this.palette_is_open = false
     }
+    // const clicked_outside_window_size= (e) => {
+    //   let has_clicked_inside = e.target === this.$el || this.$refs.window_size.contains(e.target)
+    //   return has_clicked_inside ? null : this.window_size_is_open = false
+    // }
      
     document.addEventListener('click', clicked_outside_colors_palette)
+    // document.addEventListener('click', clicked_outside_window_size)
     
     this.$once('hook:destroy', () => {
       document.removeEventListener('click', clicked_outside_colors_palette)
+      // document.removeEventListener('click', clicked_outside_window_size)
     })
   }
 }
 </script>
-<style type="text/css" scoped>
-	
-	.loader,
-	.loader:after {
-	  border-radius: 50%;
-	  width: 10em;
-	  height: 10em;
-	}
-	
-	.loader {
-		font-size: 2px;
-		position: relative;
-		text-indent: -9999em;
-		border-top: 1.1em solid rgba(255, 255, 255, 0.2);
-		border-right: 1.1em solid rgba(255, 255, 255, 0.2);
-		border-bottom: 1.1em solid rgba(255, 255, 255, 0.2);
-		border-left: 1.1em solid hsl(200, 25%, 40%); 
-		-webkit-transform: translateZ(0);
-		transform: translateZ(0);
-		-webkit-animation: loading 1.1s infinite linear;
-		animation: loading 1.1s infinite linear;
-	}
-	
-	@-webkit-keyframes loading {
-	  0% {
-	    -webkit-transform: rotate(0deg);
-	    transform: rotate(0deg);
-	  }
-	  100% {
-	    -webkit-transform: rotate(360deg);
-	    transform: rotate(360deg);
-	  }
-	}
-	
-	@keyframes loading {
-	  0% {
-	    -webkit-transform: rotate(0deg);
-	    transform: rotate(0deg);
-	  }
-	  100% {
-	    -webkit-transform: rotate(360deg);
-	    transform: rotate(360deg);
-	  }
-	}
-</style>

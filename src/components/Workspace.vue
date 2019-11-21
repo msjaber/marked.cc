@@ -1,6 +1,6 @@
 <template>
-	<div>
-		<div class="l-toolbar animated fadeInDown" style="animation-delay: 1.4s; animation-duration: 0.8s;">
+	<div class="l-workspace">
+		<div class="l-toolbar animated fadeInDown">
 			<toolbar 
 				:options="options"
 				:is_downloading='state.is_downloading'
@@ -28,7 +28,7 @@
 	                      top: `${edit_menu_top}px`,
 	                      left: `${edit_menu_left}px`
 	                  	}">
-						<edit-menu 
+						<edit-menu
 							:options="options"
 							@hide="state.edit_menu_is_open = false"
 							@strikethrough="strikethrough" 
@@ -40,30 +40,45 @@
 
 			<div id="l-exportable" class="l-exportable" @mouseup="mouseup_callback">
 				<div class="l-border">
-				<div 
-					:style="{
-						'background-color': background_color,
-						'padding-left': `${options.padding_x}rem`,
-						'padding-right': `${options.padding_x}rem`,
-						'padding-top': `${options.padding_y}rem`,
-						'padding-bottom': `${options.padding_y}rem`
-					}"
-					class="c-exportable"
-					id="c-exportable">
-					<note ref="note" 
-						:options="options"
-						@mouseup_callback="mouseup_callback"
-						@show_edit_menu="state.edit_menu_is_open = true"
-						@hide_edit_menu="state.edit_menu_is_open = false"
-					></note>
-				</div>
+					<div 
+						:style="{
+							'background-color': background_color,
+							'padding-left': `${options.padding_x}rem`,
+							'padding-right': `${options.padding_x}rem`,
+							'padding-top': `${options.padding_y}rem`,
+							'padding-bottom': `${options.padding_y}rem`
+						}"
+						class="c-exportable"
+						id="c-exportable">
+						<note ref="note" 
+							:options="options"
+							@mouseup_callback="mouseup_callback"
+							@show_edit_menu="state.edit_menu_is_open = true"
+							@hide_edit_menu="state.edit_menu_is_open = false"
+						></note>
+					</div>
 				</div>
 			</div>
 
+			<div class="l-export-button animated fadeInUp">
+				<button class="c-export-button" @click="export_image"> 
+					<span v-if="state.is_downloading" class="c-toolbar__item--icon">
+						<div>
+							<div class="loader"></div>
+						</div>
+					</span>
+
+					<svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 -2 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+				</button>
+			</div>
 		</div>
-	
-		<div class="l-created-by">
-			<p class="c-created-by">Created by <a href="#"> Mohammad S. Jaber</a></p>
+
+		<div class="l-footer">
+			<p class="c-links select-none">
+				<a href="https://github.com/msjaber/marked.cc">Github</a>
+			</p>
+			
+			<p class="c-created-by select-none">Created by <a href="https://msjaber.com"> Mohammad S. Jaber</a></p>
 		</div>
 	</div>
 </template>
@@ -222,22 +237,18 @@ export default {
 		},
 
 		export_image() {
-			console.log('Sending')
-			ga('send', {
-              'hitType': 'event',
-              'eventCategory': 'Export Image',
-              'eventAction': 'Export Image',
-              'eventLabel': 'Export Image',
-              'useBeacon': true,
-              'hitCallback': () => {
-				console.log('Sent')
-              }
-            })
+			// Sends the event to the Google Analytics property with
+			// tracking ID GA_MEASUREMENT_ID set by the config command in
+			// the global tracking snippet.
+			gtag('event', 'export', {
+			  'event_category': 'User',
+			  'event_label': (new Date().getTime()).toString().substr(5)
+			})
 
 			const link = document.createElement('a')
 			this.state.is_downloading = true
 			new Promise((resolve, reject) => {
-				// Let the user think that we're making huge effort to export the image. :P
+				// An illusion that we're making huge effort to export the image. :P
 				setTimeout(() => {
 					this.get_image()
 					.then(url => {
@@ -248,8 +259,10 @@ export default {
 						link.remove()
 						resolve()
 					}).catch(error => {
+						alert(error)
 						alert('Something went wrong')
 						this.state.is_downloading = false
+						console.log(error);
 					})
 				}, 1000)
 			}).then(() => {
@@ -259,30 +272,20 @@ export default {
 
 		async get_image() {
 			let node = document.getElementById('c-exportable')
-			node.style.maxWidth = 'initial'
 			const scale = 2
 			const width =  node.offsetWidth * scale
 			const height =  node.offsetHeight * scale
-
-			console.log({width, height})
 			const config = {
 				width: width,
 				height: height,
 				style: {
-					'padding': 0,
+					'padding': '0',
 					'margin': 'auto auto',
 					'display': 'flex',
 					'justifyContent': 'center',
 					'alignItems': 'center',
 					'transform': `scale(${scale})`,
 					'transform-origin': 'center'
-				},
-				filter: n => {
-				  console.log({n})
-				  if (n.className) {
-				    return String(n.className).indexOf('eliminateOnRender') < 0
-				  }
-				  return true
 				}
 			}
 
