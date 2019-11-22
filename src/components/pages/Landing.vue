@@ -93,8 +93,7 @@ import {
 	get_month_name,
 	generate_strikethrough_element,
 	generate_bold_element,
-	generate_highlighted_element,
-	svgToBase64Image,
+	generate_highlighted_element
 } from '../../utils'
 
 import {

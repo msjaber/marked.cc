@@ -6,7 +6,6 @@ body { background: hsl(45, 100%, 96%); }
 	width: 100%;
 	padding: 2rem 0;
 }
-
 .c-toolbar {
 	display: flex;
 	justify-content: center;
@@ -172,6 +171,7 @@ body { background: hsl(45, 100%, 96%); }
 .c-page__text {
 	width: 100%;
 	height: 89%;
+	min-height: 50px;
 	box-sizing: border-box;
 	font-size: 1.1rem;
 	line-height: 2rem;

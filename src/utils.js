@@ -17,32 +17,21 @@ export function get_month_name(index) {
 	return months_names[index]
 }
 
-// export function generate_strikethrough_element(text) {
-// 	let span = document.createElement("span");
-// 	span.classList.add("strikethrough");
-// 	span.appendChild(document.createTextNode(text))
-// 	return span
-// }
-
-// export function generate_bold_element(text) {
-// 	let span = document.createElement("span");
-// 	span.classList.add("bold");
-// 	span.appendChild(document.createTextNode(text))
-// 	return span
-// }
-
-// export function generate_highlighted_element(text, background_color) {
-// 	let span = document.createElement("span");
-// 	span.classList.add("highlighted");
-// 	span.appendChild(document.createTextNode(text))
-// 	span.style.backgroundColor = background_color
-// 	return span
-// }
-
-// Encode an SVG element as a base64 data uri.
-export function svgToBase64Image(svgElement) {
-	var div = document.createElement('div');
-	div.appendChild(svgElement.cloneNode(true));
-	var b64 = window.btoa(div.innerHTML);
-	return 'data:image/svg+xml;base64,' + b64;
+// Thanks: https://stackoverflow.com/questions/4233265/contenteditable-set-caret-at-the-end-of-the-text-cross-browser/4238971#4238971
+export function placeCaretAtEnd(el) {
+    el.focus();
+    if (typeof window.getSelection != "undefined"
+            && typeof document.createRange != "undefined") {
+        var range = document.createRange();
+        range.selectNodeContents(el);
+        range.collapse(false);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+    } else if (typeof document.body.createTextRange != "undefined") {
+        var textRange = document.body.createTextRange();
+        textRange.moveToElementText(el);
+        textRange.collapse(false);
+        textRange.select();
+    }
 }

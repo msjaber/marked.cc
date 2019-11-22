@@ -237,9 +237,6 @@ export default {
 		},
 
 		export_image() {
-			// Sends the event to the Google Analytics property with
-			// tracking ID GA_MEASUREMENT_ID set by the config command in
-			// the global tracking snippet.
 			gtag('event', 'export', {
 			  'event_category': 'User',
 			  'event_label': (new Date().getTime()).toString().substr(5)
@@ -259,7 +256,6 @@ export default {
 						link.remove()
 						resolve()
 					}).catch(error => {
-						alert(error)
 						alert('Something went wrong')
 						this.state.is_downloading = false
 						console.log(error);
@@ -272,6 +268,7 @@ export default {
 
 		async get_image() {
 			let node = document.getElementById('c-exportable')
+			node.style.maxWidth = 'initial' // overwrite the max-width: 900px;
 			const scale = 2
 			const width =  node.offsetWidth * scale
 			const height =  node.offsetHeight * scale
@@ -296,4 +293,4 @@ export default {
 
 </script>
 
-<style src="@/app.css"></style>
+<style src="@/style/app.css"></style>

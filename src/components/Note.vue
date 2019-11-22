@@ -32,11 +32,12 @@
 			</span>
 
 			<div 
-				tabindex="0" 
+				tabindex="0"
 				class="c-page__text" 
 				contenteditable="true"
 				ref="text"
-				v-html="text"
+				@paste="paste_callback"
+				@input="normalize"
 				@mouseup.stop="mouseup_callback"
 				@keydown="$emit('hide_edit_menu')"
 			>
@@ -52,8 +53,7 @@ import {
 	get_month_name,
 	generate_strikethrough_element,
 	generate_bold_element,
-	generate_highlighted_element,
-	svgToBase64Image,
+	generate_highlighted_element
 } from '../utils'
 
 import {
@@ -108,7 +108,11 @@ export default {
   },
 
   methods: {
+  	onFocus() { console.log('focus') },
+    
     focus_on_text() { this.$refs.text.focus() },
+
+    normalize() { this.highlighter.normalize() },
 
     mouseup_callback(e) { this.$emit('mouseup_callback') },
 
@@ -121,6 +125,21 @@ export default {
 	highlight(class_name) { 
       class_name = class_name || HIGHLIGHT_COLORS[this.options.highlight_color_index].class
       this.highlighter.mark(class_name) 
+    },
+
+    paste_callback(e){
+      e.preventDefault();
+      var text = '';
+      if (e.clipboardData || e.originalEvent.clipboardData) {
+        text = (e.originalEvent || e).clipboardData.getData('text/plain');
+      } else if (window.clipboardData) {
+        text = window.clipboardData.getData('Text');
+      }
+      if (document.queryCommandSupported('insertText')) {
+        document.execCommand('insertText', false, text);
+      } else {
+        document.execCommand('paste', false, text);
+      }
     }
   }
 }
